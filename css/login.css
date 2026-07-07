@@ -1,0 +1,225 @@
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+
+background:#f4f6f9;
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+height:100vh;
+
+}
+
+.login-box{
+
+width:380px;
+
+background:white;
+
+padding:35px;
+
+border-radius:15px;
+
+box-shadow:0 15px 35px rgba(0,0,0,.15);
+
+text-align:center;
+
+}
+
+.logo{
+
+font-size:60px;
+
+color:#0d6efd;
+
+margin-bottom:15px;
+
+}
+
+h1{
+
+margin-bottom:10px;
+
+}
+
+p{
+
+margin-bottom:25px;
+
+color:#777;
+
+}
+
+.input-group{
+
+position:relative;
+
+margin-bottom:20px;
+
+}
+
+.input-group i{
+
+position:absolute;
+
+left:15px;
+
+top:15px;
+
+color:#777;
+
+}
+
+.input-group input{
+
+width:100%;
+
+padding:13px 15px 13px 45px;
+
+border:1px solid #ddd;
+
+border-radius:8px;
+
+outline:none;
+
+font-size:15px;
+
+}
+
+button{
+
+width:100%;
+
+padding:14px;
+
+border:none;
+
+background:#0d6efd;
+
+color:white;
+
+font-size:16px;
+
+border-radius:8px;
+
+cursor:pointer;
+
+transition:.3s;
+
+}
+
+button:hover{
+
+background:#0955c8;
+
+}
+
+#mensaje{
+
+margin-top:20px;
+
+font-weight:bold;
+
+}
+.error-login{
+
+    margin-top:15px;
+
+    padding:12px;
+
+    background:#FEE2E2;
+
+    color:#B91C1C;
+
+    border-radius:8px;
+
+    font-size:14px;
+
+    text-align:center;
+
+    border:1px solid #FCA5A5;
+
+}
+.loader-overlay{
+
+    position:fixed;
+    inset:0;
+
+    background:rgba(255,255,255,.8);
+
+    display:none;
+
+    justify-content:center;
+
+    align-items:center;
+
+    z-index:99999;
+
+    backdrop-filter:blur(3px);
+
+}
+
+.loader-box{
+
+    background:#fff;
+
+    padding:30px;
+
+    border-radius:15px;
+
+    box-shadow:0 10px 30px rgba(0,0,0,.15);
+
+    text-align:center;
+
+    min-width:220px;
+
+}
+
+.loader-spinner{
+
+    width:55px;
+
+    height:55px;
+
+    border:5px solid #E5E7EB;
+
+    border-top:5px solid #2563EB;
+
+    border-radius:50%;
+
+    animation:girar .8s linear infinite;
+
+    margin:auto;
+
+}
+
+.loader-box p{
+
+    margin-top:20px;
+
+    font-size:15px;
+
+    font-weight:600;
+
+    color:#555;
+
+}
+
+@keyframes girar{
+
+    to{
+
+        transform:rotate(360deg);
+
+    }
+
+}
