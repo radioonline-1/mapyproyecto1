@@ -198,6 +198,8 @@ function filtrarPedidos(){
 
 function nuevoPedido(){
 
+    window.pedidoEditando = null;
+
     document.getElementById("plataforma").value = "";
     document.getElementById("pedido").value = "";
     document.getElementById("cliente").value = "";
@@ -210,6 +212,19 @@ function nuevoPedido(){
     document.getElementById("fechaEnvio").value = "";
     document.getElementById("estado").value = "Pendiente";
     document.getElementById("motivo").value = "";
+
+    const titulo = document.querySelector("#modalPedido h2");
+
+    if(titulo){
+        titulo.textContent = "Nuevo Pedido";
+    }
+
+    const boton = document.querySelector("#modalPedido .btn-primary");
+
+    if(boton){
+        boton.textContent = "Guardar Pedido";
+        boton.onclick = guardarPedido;
+    }
 
     document.getElementById("modalPedido").style.display = "flex";
 
@@ -282,10 +297,165 @@ function editarPedido(i){
 
     const pedido = pedidos[i];
 
-    console.log(pedido);
+    if(!pedido){
+        error("Pedido no encontrado");
+        return;
+    }
+
+    // Guardamos el pedido que estamos editando
+    window.pedidoEditando = pedido;
+
+    // Cargar datos en el formulario
+    document.getElementById("plataforma").value = pedido.plataforma || "";
+    document.getElementById("pedido").value = pedido.pedido || "";
+    document.getElementById("cliente").value = pedido.cliente || "";
+    document.getElementById("contacto").value = pedido.contacto || "";
+
+    document.getElementById("fechaVenta").value =
+        formatearFechaInput(pedido.fechaVenta);
+
+    document.getElementById("moneda").value = pedido.moneda || "GS";
+    document.getElementById("valor").value = pedido.monto || "";
+
+    document.getElementById("transportadora").value =
+        pedido.transportadora || "";
+
+    document.getElementById("guia").value = pedido.guia || "";
+
+    document.getElementById("fechaEnvio").value =
+        formatearFechaInput(pedido.fechaEnvio);
+
+    document.getElementById("estado").value =
+        pedido.estado || "Pendiente";
+
+    const motivo = document.getElementById("motivo");
+
+    if(motivo){
+        motivo.value = pedido.motivo || "";
+    }
+
+    // Cambiar título del modal
+    const titulo = document.querySelector("#modalPedido h2");
+
+    if(titulo){
+        titulo.textContent = "Editar Pedido";
+    }
+
+    // Cambiar botón
+    const boton = document.querySelector("#modalPedido .btn-primary");
+
+    if(boton){
+        boton.textContent = "Actualizar Pedido";
+        boton.onclick = actualizarPedido;
+    }
+
+    // Abrir modal
+    document.getElementById("modalPedido").style.display = "flex";
 
 }
+async function actualizarPedido(){
 
+    const pedido = window.pedidoEditando;
+
+    if(!pedido){
+        error("No se encontró el pedido");
+        return;
+    }
+
+    mostrarLoader("Actualizando pedido...");
+
+    const datos = {
+
+        action: "editarPedido",
+
+        id: pedido.id,
+
+        plataforma: document.getElementById("plataforma").value,
+
+        pedido: document.getElementById("pedido").value,
+
+        cliente: document.getElementById("cliente").value,
+
+        contacto: document.getElementById("contacto").value,
+
+        fechaVenta: document.getElementById("fechaVenta").value,
+
+        moneda: document.getElementById("moneda").value,
+
+        valor: document.getElementById("valor").value,
+
+        transportadora: document.getElementById("transportadora").value,
+
+        guia: document.getElementById("guia").value,
+
+        fechaEnvio: document.getElementById("fechaEnvio").value,
+
+        estado: document.getElementById("estado").value,
+
+        motivo: document.getElementById("motivo")?.value || ""
+
+    };
+
+    try {
+
+        const respuesta = await apiPost(datos);
+
+        if(respuesta.ok){
+
+            // Limpiar caché
+            window.cache.pedidos = null;
+
+            // Limpiar pedido en edición
+            window.pedidoEditando = null;
+
+            cerrarModal();
+
+            await cargarPedidos();
+
+            exito("Pedido actualizado correctamente");
+
+        }else{
+
+            error(
+                "No se pudo actualizar",
+                respuesta.mensaje || "Ocurrió un error."
+            );
+
+        }
+
+    }catch(e){
+
+        console.error(e);
+
+        error(
+            "Error de conexión",
+            "No se pudo actualizar el pedido."
+        );
+
+    }finally{
+
+        ocultarLoader();
+
+    }
+
+}
+function formatearFechaInput(fecha){
+
+    if(!fecha) return "";
+
+    const f = new Date(fecha);
+
+    if(isNaN(f.getTime())){
+        return "";
+    }
+
+    const anio = f.getFullYear();
+    const mes = String(f.getMonth() + 1).padStart(2, "0");
+    const dia = String(f.getDate()).padStart(2, "0");
+
+    return `${anio}-${mes}-${dia}`;
+
+}
 async function eliminarPedido(i){
 
     const ok = await confirmar(
